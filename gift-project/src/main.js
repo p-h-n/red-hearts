@@ -39,7 +39,7 @@ const extrudeSettings = {
 	bevelThickness: 1
 };
 const geometry = new THREE.ExtrudeGeometry( heartShape, extrudeSettings );
-const mesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial() );
+const m = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial() );
 
 //function to animate
 function animate(){
