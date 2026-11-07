@@ -38,13 +38,29 @@ const extrudeSettings = {
 	bevelSize: 1,
 	bevelThickness: 1
 };
-const geometry = new THREE.ExtrudeGeometry( heartShape, extrudeSettings );
-const m = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial() );
+const geometry = new THREE.ExtrudeGeometry( heart, extrudeSettings );
+//put object at center
+geometry.center();
+
+//add white static I
+
+//add white static U
+
+//create mesh for heart
+const m = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial({
+  color: 0xe0143c,
+  roughness: 0.3,
+  metalness: 0.2
+}) );//color of heart set to red and surface made smooth
+
+
+m.scale.set(0.02, -0.02, 0.02);//scale heart down
+sc.add(m);//add mesh shape to scene
 
 //function to animate
 function animate(){
   requestAnimationFrame(animate);
-  m.rotation.x += 0.01; //rotate along the x axis
+  //m.rotation.x += 0.01; //rotate along the x axis
   m.rotation.y += 0.01;//rotate along the y axis
   rdr.render(sc, cam);//use renderer to create the scene and camera
 }
