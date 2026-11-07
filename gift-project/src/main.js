@@ -14,12 +14,32 @@ const rdr = new THREE.WebGLRenderer({ antialias: true});
 rdr.setSize(ww, wh);
 document.body.appendChild(rdr.domElement);
 
-//create Mesh for object
+/*create Mesh for object
 const m = new THREE.Mesh(
   new THREE.IcosahedronGeometry(1),
   new THREE.MeshNormalMaterial()
 );
-sc.add(m);
+sc.add(m);*/
+
+//create heart shape
+const heart = new THREE.Shape();
+heart.moveTo( 25, 25);
+heart.bezierCurveTo( 25, 25, 20, 0, 0, 0 );
+heart.bezierCurveTo( - 30, 0, - 30, 35, - 30, 35 );
+heart.bezierCurveTo( - 30, 55, - 10, 77, 25, 95 );
+heart.bezierCurveTo( 60, 77, 80, 55, 80, 35 );
+heart.bezierCurveTo( 80, 35, 80, 0, 50, 0 );
+heart.bezierCurveTo( 35, 0, 25, 25, 25, 25 );
+const extrudeSettings = {
+	depth: 8,
+	bevelEnabled: true,
+	bevelSegments: 2,
+	steps: 2,
+	bevelSize: 1,
+	bevelThickness: 1
+};
+const geometry = new THREE.ExtrudeGeometry( heartShape, extrudeSettings );
+const mesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial() );
 
 //function to animate
 function animate(){
