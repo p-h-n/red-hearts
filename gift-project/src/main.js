@@ -1,4 +1,5 @@
-import * as THREE from 'three'
+import * as THREE from 'three' //import three.js library
+import lifetimeURL from './assets/Justin Bieber - Lifetime.mp3'
 
 //initializes window height and length
 const wh = window.innerHeight;
@@ -33,12 +34,12 @@ heart.bezierCurveTo( 60, 77, 80, 55, 80, 35 );
 heart.bezierCurveTo( 80, 35, 80, 0, 50, 0 );
 heart.bezierCurveTo( 35, 0, 25, 25, 25, 25 );
 const extrudeSettings = {
-	depth: 8,
+	depth: 15,
 	bevelEnabled: true,
-	bevelSegments: 2,
-	steps: 2,
-	bevelSize: 1,
-	bevelThickness: 1
+	bevelSegments: 5,
+	steps: 10,
+	bevelSize: 3,
+	bevelThickness: 5
 };
 const geometry = new THREE.ExtrudeGeometry( heart, extrudeSettings );
 //put object at center
@@ -77,12 +78,19 @@ I_m.position.x = -5;
 sc.add(I_m);
 
 //add white static U
-//triangle template for now
 const U = new THREE.Shape();
-U.moveTo(0, 0);
-U.lineTo (1, 2);
-U.lineTo(2, 0);
-U.lineTo(0, 0);
+U.moveTo(0, 3);       // outer top-left
+U.lineTo(0, 0.8);
+U.bezierCurveTo(0, -0.5, 1, -1.2, 2, -1.2);
+U.bezierCurveTo(3, -1.2, 4, -0.5, 4, 0.8);
+U.lineTo(4, 3);       // outer top-right
+
+U.lineTo(3, 3);       // inner top-right
+U.lineTo(3, 0.8);
+U.bezierCurveTo(3, 0.1, 2.6, -0.2, 2, -0.2);
+U.bezierCurveTo(1.4, -0.2, 1, 0.1, 1, 0.8);
+U.lineTo(1, 3);       // inner top-left
+U.closePath();
 //U.lineTo(0, 0);
 
 //geometry of U
@@ -94,10 +102,12 @@ const U_m = new THREE.Mesh(U_geometry, tempU);
 
 //I position
 U_m.position.z = 0;
-U_m.position.y = 0;
+U_m.position.y = 0.5;
 U_m.position.x = 3;
 
-//add to scene
+//add a scale to the shape
+U_m.scale.set(0.6, 0.6, 0.2);
+//add U shape 
 sc.add(U_m);
 
 
@@ -109,12 +119,12 @@ const m = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial({
 }) );//color of heart set to red and surface made smooth
 
 
-m.scale.set(0.02, -0.02, 0.02);//scale heart down
+m.scale.set(0.03, -0.03, 0.02);//scale heart down
 
 //position of heart
 m.position.z = 0;
 m.position.y = 1;
-m.position.x = 1
+m.position.x = 1;
 
 sc.add(m);//add heart mesh to scene
 
@@ -135,4 +145,34 @@ window.addEventListener('resize', () => {
   cam.aspect = w / h;
   cam.updateProjectionMatrix();
   rdr.setSize(w, h);
+});
+
+//code to play audio
+const listener = new THREE.AudioListener();
+cam.add(listener);
+//create a global audio src
+const sound = new THREE.Audio( listener );
+//load Lifetime and set it as Audio obj buffer
+const audioLoader = new THREE.AudioLoader();
+audioLoader.load(lifetimeURL , (buffer) => {
+  sound.setBuffer( buffer );
+  sound.setLoop( true );
+  sound.setVolume( 0.5 );
+  //sound.play();
+}, undefined, (error) => {
+  console.error("Could not play music: ", error);//error handling
+});
+
+//play button
+const play = document.getElementById('playB');
+play.addEventListener( 'click', async () => {
+  await listener.context.resume();
+  if(sound.buffer && !sound.isPlaying) sound.play(); //play song
+});
+
+//pause button
+const pause = document.getElementById('pauseB');
+pause.addEventListener( 'click', async () => {
+  await listener.context.resume();
+  sound.pause();//pause the song.
 });
